@@ -24,6 +24,7 @@ require 'nokogiri/xml/notation'
 require 'nokogiri/xml/entity_decl'
 require 'nokogiri/xml/schema'
 require 'nokogiri/xml/relax_ng'
+require 'nokogiri/xml/xid'
 
 module Nokogiri
   class << self
