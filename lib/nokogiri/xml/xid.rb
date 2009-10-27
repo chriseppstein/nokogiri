@@ -13,8 +13,13 @@ module Nokogiri
       private
 
       def recursively_calculate_hash_for_node(node)
-        children_hashes = node.children.collect { |child| recursively_calculate_hash_for_node(child) }.join(",")
-        Digest::SHA1.hexdigest("#{node.name}+#{children_hashes}")
+        children_hash = Digest::SHA1.hexdigest(Array(node.children).collect { |child|
+            recursively_calculate_hash_for_node(child)
+          }.join(","))
+        attribute_hash = Digest::SHA1.hexdigest(Array(node.attributes).collect { |attr|
+            Digest::SHA1.hexdigest("#{attr.first}=#{attr.last.value}")
+          }.join(","))
+        Digest::SHA1.hexdigest [node.name, attribute_hash, children_hash].join(",")
       end
 
     end

@@ -55,6 +55,22 @@ module Nokogiri
         assert_not_equal Nokogiri::XML::XID.new(node1).hash, Nokogiri::XML::XID.new(node2).hash
       end
 
+      def test_same_element_with_different_attributes_do_not_have_equal_xid_hashes
+        doc = Nokogiri::HTML "<html><body><div class='1' size='large'></div><div size='medium' class='2'></div></body></html>"
+        node1 = doc.at_xpath("//div[position()=1]")
+        node2 = doc.at_xpath("//div[position()=2]")
+
+        assert_not_equal Nokogiri::XML::XID.new(node1).hash, Nokogiri::XML::XID.new(node2).hash
+      end
+
+      def test_same_element_with_hacked_attributes_do_not_have_equal_xid_hashes
+        doc = Nokogiri::HTML "<html><body><div class='1' size='large'></div><div size='large,class=1'></div></body></html>"
+        node1 = doc.at_xpath("//div[position()=1]")
+        node2 = doc.at_xpath("//div[position()=2]")
+
+        assert_not_equal Nokogiri::XML::XID.new(node1).hash, Nokogiri::XML::XID.new(node2).hash
+      end
+
     end
   end
 end
